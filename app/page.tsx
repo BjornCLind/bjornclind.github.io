@@ -1,8 +1,11 @@
+"use client"
+import Hero from "@/components/Hero";
+
 export default function Home() {
   return (
     <main>
       <div>
-        <h1>Welcome to my Portfolio!</h1>
+        <Hero/>
       </div>
     </main>
   );
