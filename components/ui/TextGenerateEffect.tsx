@@ -1,70 +1,56 @@
 "use client";
-
-import { useEffect, useRef } from "react";
-import { motion, stagger, useAnimate, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
+import { motion, stagger, useAnimate } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const TextGenerateEffect = ({
   words,
   className,
-  filter = true,
-  duration = 0.5,
 }: {
   words: string;
   className?: string;
-  filter?: boolean;
-  duration?: number;
 }) => {
   const [scope, animate] = useAnimate();
-  const wordsArray = words.split(" ");
-
-  const hasAnimatedRef = useRef(false);
-
+  let wordsArray = words.split(" ");
   useEffect(() => {
-    if (!hasAnimatedRef.current) {
-      // Only animate once to prevent repeated triggering
-      animate(
-        "span",
-        {
-          opacity: 1,
-          filter: filter ? "blur(0px)" : "none",
-        },
-        {
-          duration,
-          delay: stagger(0.2),
-        }
-      );
-      hasAnimatedRef.current = true; // Mark animation as done
-    }
-  }, [animate, filter, duration]);
+    console.log(wordsArray);
+    animate(
+      "span",
+      {
+        opacity: 1,
+      },
+      {
+        duration: 2,
+        delay: stagger(0.2),
+      }
+    );
+  }, [scope.current]);
 
   const renderWords = () => {
     return (
       <motion.div ref={scope}>
-        <AnimatePresence>
-          {wordsArray.map((word, idx) => (
+        {wordsArray.map((word, idx) => {
+          return (
             <motion.span
               key={word + idx}
-              initial={{ opacity: 0, filter: filter ? "blur(10px)" : "none" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              transition={{
-                duration,
-                delay: idx * 0.2,
-              }}
-              className={`${idx > 2 ? "text-purple" : "text-white"} mx-1`}
+              // change here if idx is greater than 3, change the text color to #CBACF9
+              className={` ${idx > 3 ? "text-purple" : "dark:text-white text-black"
+                } opacity-0`}
             >
-              {word}
+              {word}{" "}
             </motion.span>
-          ))}
-        </AnimatePresence>
+          );
+        })}
       </motion.div>
     );
   };
 
   return (
     <div className={cn("font-bold", className)}>
+      {/* mt-4 to my-4 */}
       <div className="my-4">
-        <div className="leading-snug tracking-wide">
+        {/* remove  text-2xl from the original */}
+        <div className=" dark:text-white text-black leading-snug tracking-wide">
           {renderWords()}
         </div>
       </div>

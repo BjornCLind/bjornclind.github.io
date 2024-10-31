@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-// import dynamic from "next/dynamic";
-import { World } from "./Globe";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
-// const World = dynamic(() => import("./Globe").then((m) => m.default), {
-//   ssr: false,
-// });
+const World = dynamic(() => import("./Globe").then((m) => m.World), {
+  ssr: false,
+});
 
 const GridGlobe = () => {
   const globeConfig = {
