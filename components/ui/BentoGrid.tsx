@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 
 import { BackgroundGradientAnimation } from "./GradientBg";
 import GridGlobe from "./GridGlobe";
-import animationData from "@/data/confetti.json";
 import MagicButton from "../MagicButton";
 import Image from "next/image";
 
@@ -60,20 +59,23 @@ export const BentoGridItem = ({
   const rightLists = ["Laravel", "Power BI", "Docker"];
 
   const [copied, setCopied] = useState(false);
+  // The confetti animation is ~600kB of JSON. Importing it statically put all
+  // of that in the initial page chunk for an effect that only ever runs after
+  // a click, so it is fetched on demand instead.
+  const [confetti, setConfetti] = useState<object | null>(null);
+  // Bumped on every copy so the animation remounts and replays, rather than
+  // playing once on first load and then sitting finished.
+  const [plays, setPlays] = useState(0);
 
-  const defaultOptions = {
-    loop: copied,
-    autoplay: copied,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
-  const handleCopy = () => {
-    const text = "bjornlndq@proton.me";
-    navigator.clipboard.writeText(text);
+  const handleCopy = async () => {
+    navigator.clipboard.writeText("bjornlndq@proton.me");
     setCopied(true);
+    if (confetti) {
+      setPlays((n) => n + 1);
+      return;
+    }
+    const data = await import("@/data/confetti.json");
+    setConfetti(data.default);
   };
 
   return (
@@ -183,14 +185,23 @@ export const BentoGridItem = ({
               {/* add rounded-md h-8 md:h-8, remove rounded-full */}
               {/* remove focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 */}
               {/* add handleCopy() for the copy the text */}
-              <div
-                className={`absolute -bottom-5 right-0 ${
-                  copied ? "block" : "block"
-                }`}
-              >
-                {/* <img src="/confetti.gif" alt="confetti" /> */}
-                <Lottie options={defaultOptions} height={200} width={400} />
-              </div>
+              {confetti && (
+                <div className="absolute -bottom-5 right-0" aria-hidden="true">
+                  <Lottie
+                    key={plays}
+                    options={{
+                      loop: false,
+                      autoplay: true,
+                      animationData: confetti,
+                      rendererSettings: {
+                        preserveAspectRatio: "xMidYMid slice",
+                      },
+                    }}
+                    height={200}
+                    width={400}
+                  />
+                </div>
+              )}
 
               <MagicButton
                 title={copied ? "Email is Copied!" : "Copy my email address"}

@@ -1,7 +1,15 @@
+"use client";
+
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
-import { CanvasRevealEffect } from "./ui/CanvasRevealEffect";
+// Pulls in three.js and react-three-fiber, but only renders on hover, so the
+// chunk is fetched then rather than shipped with the initial page.
+const CanvasRevealEffect = dynamic(
+  () => import("./ui/CanvasRevealEffect").then((m) => m.CanvasRevealEffect),
+  { ssr: false }
+);
 
 const Approach = () => {
   return (

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
@@ -7,7 +7,39 @@ const World = dynamic(() => import("./Globe").then((m) => m.World), {
   ssr: false,
 });
 
+// The globe pulls in three.js and ~324kB of country geometry. It sits below
+// the fold, so the chunk is only requested once it is close to being seen.
+function useNearViewport<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      // Small margin only: enough to avoid an abrupt pop-in, but not so wide
+      // that a ~650kB three.js chunk is fetched while the hero is still on screen.
+      { rootMargin: "100px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [near]);
+
+  return { ref, near };
+}
+
 const GridGlobe = () => {
+  const { ref: globeRef, near: globeVisible } = useNearViewport<HTMLDivElement>();
   const globeConfig = {
     pointSize: 4,
     globeColor: "#062056",
@@ -425,8 +457,8 @@ const GridGlobe = () => {
         </motion.div> */}
         <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" />
         {/* remove -bottom-20 */}
-        <div className="absolute w-full h-72 md:h-full z-10">
-          <World data={sampleArcs} globeConfig={globeConfig} />
+        <div ref={globeRef} className="absolute w-full h-72 md:h-full z-10">
+          {globeVisible && <World data={sampleArcs} globeConfig={globeConfig} />}
         </div>
       </div>
     </div>
