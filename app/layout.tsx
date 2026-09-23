@@ -8,7 +8,17 @@ import { ThemeProvider } from "./provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const siteUrl = "https://bjornclind.github.io";
+// Canonical site URL, baked in at build time.
+//
+// Vercel exposes the project's stable production domain (and keeps it correct
+// if a custom domain is added later), so its builds resolve this themselves.
+// The GitHub Pages build has no such variable and uses SITE_URL below, which
+// must name the same canonical host so both copies agree on which is primary.
+const SITE_URL = "https://bjornclind.github.io";
+
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : process.env.NEXT_PUBLIC_SITE_URL || SITE_URL;
 const description =
   "Portfolio of Bjorn Lindqvist, a full stack engineer who designs, builds " +
   "and maintains web systems end to end.";
