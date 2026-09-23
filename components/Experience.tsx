@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { experiences } from "@/data";
 import { Button } from "./ui/MovingBorders";
 
@@ -37,11 +38,13 @@ const Experience = () => {
               >
                 {/* Icon on the left */}
                 <div className="flex items-center justify-center">
-                  <img
+                  {/* Decorative: the company name is rendered as text below. */}
+                  <Image
                     src={exp.icon}
-                    alt={exp.company_name}
-                    className="object-contain"
-                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    alt=""
+                    width={128}
+                    height={128}
+                    className="h-auto w-auto max-w-full object-contain"
                   />
                 </div>
 

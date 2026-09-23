@@ -29,6 +29,11 @@ jobs:
 
       - run: npm ci
 
+      # Fail the deploy on lint or type errors rather than shipping them.
+      - run: npm run lint
+
+      - run: npm run typecheck
+
       - run: npm run build
 
       - uses: actions/configure-pages@v5
