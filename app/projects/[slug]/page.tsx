@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import ProjectIntro from "@/components/ProjectIntro";
+import ProjectVisual from "@/components/ProjectVisual";
 import { projects } from "@/data";
 
 type Params = { params: { slug: string } };
@@ -31,44 +33,70 @@ export default function ProjectPage({ params }: Params) {
   if (!project) notFound();
 
   return (
-    <main className="relative mx-auto flex min-h-screen justify-center bg-black-100 px-5 sm:px-10">
-      <article className="w-full max-w-3xl py-24 sm:py-32">
-        <Link
-          href="/#projects"
-          className="text-sm text-purple underline underline-offset-4"
-        >
-          &larr; Back to projects
-        </Link>
+    <main className="relative min-h-screen overflow-hidden bg-black-100 px-5 sm:px-10">
+      {project.visual && <ProjectVisual name={project.visual} />}
 
-        <h1 className="mt-8 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
-          {project.title}
-        </h1>
-
-        <p className="mt-3 text-sm text-white-200">{project.context}</p>
-
-        <p className="mt-6 text-lg leading-relaxed text-white-100">
-          {project.des}
-        </p>
-
-        <ul className="mt-8 flex flex-wrap gap-2">
-          {project.tech.map((item) => (
-            <li
-              key={item}
-              className="rounded-lg bg-[#10132E] px-3 py-1.5 text-xs text-white-100"
+      <div className="relative mx-auto flex justify-center">
+        <article className="w-full max-w-3xl py-24 sm:py-32">
+          <ProjectIntro>
+            <Link
+              href="/#projects"
+              data-reveal
+              className="inline-block text-sm text-purple underline underline-offset-4"
             >
-              {item}
-            </li>
-          ))}
-        </ul>
+              &larr; Back to projects
+            </Link>
 
-        <div className="mt-12 space-y-5 border-t border-black-300 pt-10">
-          {project.detail.map((paragraph, i) => (
-            <p key={i} className="leading-relaxed text-white-200">
-              {paragraph}
+            <h1
+              data-reveal
+              className="mt-8 text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
+            >
+              {project.title}
+            </h1>
+
+            <p data-reveal className="mt-3 text-sm text-white-200">
+              {project.context}
             </p>
-          ))}
-        </div>
-      </article>
+
+            <p
+              data-reveal
+              className="mt-6 text-lg leading-relaxed text-white-100"
+            >
+              {project.des}
+            </p>
+
+            <ul data-reveal className="mt-8 flex flex-wrap gap-2">
+              {project.tech.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-lg bg-[#10132E] px-3 py-1.5 text-xs text-white-100"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            {project.visual && (
+              <p data-reveal className="mt-8 text-xs text-white-200/70">
+                The field behind this page is the retrieval step: your cursor
+                is the query, and the chunks nearest it light up and link in.
+                Drag one to throw it.
+              </p>
+            )}
+
+            <div
+              data-reveal
+              className="mt-12 space-y-5 border-t border-black-300 pt-10"
+            >
+              {project.detail.map((paragraph, i) => (
+                <p key={i} className="leading-relaxed text-white-200">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </ProjectIntro>
+        </article>
+      </div>
     </main>
   );
 }

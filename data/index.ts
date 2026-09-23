@@ -126,6 +126,8 @@ export type Project = {
   tech: string[];
   context: string;
   detail: string[];
+  /** Optional decorative visual rendered behind the page header. */
+  visual?: "neural-field";
 };
 
 export const projects: Project[] = [
@@ -136,6 +138,7 @@ export const projects: Project[] = [
     des: "Retrieval-augmented search over a large policy corpus, letting staff ask plain-language questions and get answers grounded in the source documents.",
     tech: ["Qwen3", "ChromaDB", "RAG", "Python"],
     context: "Internal tool, not publicly accessible",
+    visual: "neural-field",
     detail: [
       "Policy manuals are long, cross-referenced and updated in place, so the practical problem is not search but trust: staff need the passage an answer came from, not a paraphrase.",
       "Documents are chunked and embedded into a vector store, and each answer is generated only from the passages retrieved for that question, with the sources shown alongside it.",
