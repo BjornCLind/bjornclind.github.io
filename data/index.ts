@@ -118,24 +118,55 @@ export const socialMedia = [
   },
 ];
 
-export const projects = [
+export type Project = {
+  id: number;
+  slug: string;
+  title: string;
+  des: string;
+  tech: string[];
+  context: string;
+  detail: string[];
+};
+
+export const projects: Project[] = [
   {
     id: 1,
+    slug: "policy-analyzer",
     title: "Policy Analyzer",
     des: "Retrieval-augmented search over a large policy corpus, letting staff ask plain-language questions and get answers grounded in the source documents.",
     tech: ["Qwen3", "ChromaDB", "RAG", "Python"],
+    context: "Internal tool, not publicly accessible",
+    detail: [
+      "Policy manuals are long, cross-referenced and updated in place, so the practical problem is not search but trust: staff need the passage an answer came from, not a paraphrase.",
+      "Documents are chunked and embedded into a vector store, and each answer is generated only from the passages retrieved for that question, with the sources shown alongside it.",
+      "The language model runs locally rather than through a hosted API, which keeps the document set inside the network it already lives in.",
+    ],
   },
   {
     id: 2,
+    slug: "microfilm-digitization",
     title: "Microfilm Digitization of Handwritten Reports",
     des: "Fine-tuned a vision-language model with LoRA to transcribe handwritten reports from digitized microfilm, turning scanned archives into searchable text.",
     tech: ["Qwen3-VL", "LoRA", "Vision-Language", "Python"],
+    context: "Internal tool, not publicly accessible",
+    detail: [
+      "General-purpose OCR handles printed text well and decades-old handwriting on microfilm badly, which leaves a large archive effectively unsearchable.",
+      "A vision-language model was fine-tuned with LoRA on representative pages, adapting it to the specific handwriting and scan quality without retraining the full model.",
+      "The result converts scanned images into text that can be indexed and searched, rather than paged through by hand.",
+    ],
   },
   {
     id: 3,
+    slug: "firearms-qualification-records",
     title: "Firearms Qualification Records",
     des: "Centralized database and management interface replacing scattered recordkeeping, with structured entry, lookup and reporting in one place.",
     tech: ["Laravel", "SQL", "Web App"],
+    context: "Internal tool, not publicly accessible",
+    detail: [
+      "Records that live in spreadsheets and paper are hard to query and easy to let drift, especially when several people maintain them independently.",
+      "A single relational schema with validation at entry replaced that, so the data is consistent enough to report on directly.",
+      "A browser interface handles entry, lookup and reporting, which removed a recurring manual collation step.",
+    ],
   },
 ];
 

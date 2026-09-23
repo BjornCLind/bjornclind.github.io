@@ -21,13 +21,11 @@ const Approach = () => {
       <div className="my-20 flex flex-col lg:flex-row items-center justify-center w-full gap-4">
         {/* add des prop */}
         <Card
-          title="Discovery & Analysis"
+          title="Understand the process"
           icon={<AceternityIcon order="Phase 1" />}
-          des="
-        I start by deeply understanding the challenge at hand. 
-        From clarifying requirements to outlining constraints, 
-        this phase sets the foundation for a tailored and efficient solution.
-      "
+          des="I start with the people doing the work. Mapping the existing
+        process, its constraints and what 'finished' actually means to them
+        is what stops a project from building the wrong thing well."
         >
           <CanvasRevealEffect
             animationSpeed={5.1}
@@ -36,13 +34,12 @@ const Approach = () => {
           />
         </Card>
         <Card
-          title="Solution Design & Prototyping"
+          title="Weigh the options"
           icon={<AceternityIcon order="Phase 2" />}
-          des="
-        Once the problem is well-defined, I map out a strategy, 
-        brainstorm possible solutions, and create prototypes. 
-        This iterative process ensures feasibility and early validation.
-      "
+          des="Before committing, I compare the realistic approaches on cost,
+        capacity and security -- including whether to build at all. I put the
+        trade-offs in front of stakeholders in plain language, then prototype
+        the option we pick."
         >
           <CanvasRevealEffect
             animationSpeed={3}
@@ -57,13 +54,11 @@ const Approach = () => {
           />
         </Card>
         <Card
-          title="Implementation & Iteration"
+          title="Build it to outlast me"
           icon={<AceternityIcon order="Phase 3" />}
-          des="
-        With a validated plan, I move swiftly into coding, testing, and refining.
-        Feedback loops ensure continuous improvement, and each iteration brings us 
-        closer to a robust, high-quality end solution.
-      "
+          des="Then I build and test it properly, and make sure it keeps
+        running without me: documentation, training for the people using it,
+        and monitoring so problems surface before users report them."
         >
           <CanvasRevealEffect
             animationSpeed={3}

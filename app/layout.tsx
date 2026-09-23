@@ -35,15 +35,11 @@ export const metadata: Metadata = {
     siteName: "Bjorn Lindqvist",
     title: "Bjorn Lindqvist | Full Stack Engineer",
     description,
-    // logo.jpg is square (1120x1120). Swap in a 1200x630 banner and update
-    // these dimensions + the twitter card below to get large link previews.
-    images: [{ url: "/logo.jpg", width: 1120, height: 1120, alt: "Bjorn Lindqvist" }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Bjorn Lindqvist | Full Stack Engineer",
     description,
-    images: ["/logo.jpg"],
   },
 };
 

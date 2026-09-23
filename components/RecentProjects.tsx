@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { projects } from "@/data";
 
 const RecentProjects = () => {
@@ -16,10 +18,12 @@ const RecentProjects = () => {
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {projects.map((project) => (
-            <div
+            <Link
               key={project.id}
+              href={`/projects/${project.slug}`}
               className="flex flex-col rounded-3xl border border-black-300 bg-black-200 p-6 lg:p-8
-              backdrop-filter backdrop-blur-lg"
+              backdrop-filter backdrop-blur-lg transition-colors hover:border-purple/60
+              focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple"
             >
               <h2 className="text-white text-lg md:text-xl font-bold">
                 {project.title}
@@ -39,7 +43,9 @@ const RecentProjects = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+
+              <span className="mt-6 text-sm text-purple">Read more &rarr;</span>
+            </Link>
           ))}
         </div>
 
