@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 
@@ -45,6 +47,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Vercel sets this during its builds; the GitHub Pages build does not.
+const onVercel = Boolean(process.env.VERCEL);
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,6 +69,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        {onVercel && <SpeedInsights />}
       </body>
     </html>
   );
