@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { animate } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 /**
  * The title arrives as handwriting and is transcribed by a scanner head that
@@ -33,6 +34,7 @@ export default function ScanlineTitle({
   const typeRef = useRef<HTMLSpanElement>(null);
   const inkRef = useRef<HTMLSpanElement>(null);
   const [scrubbable, setScrubbable] = useState(false);
+  const motion = useMotionSetting();
 
   const words = text.split(" ");
 
@@ -77,9 +79,9 @@ export default function ScanlineTitle({
     // sweep is wound back to its start here, before the browser paints.
     const wrap = wrapRef.current;
     if (!wrap) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
     wrap.style.setProperty("--scan", "0%");
-  }, [alignInk]);
+  }, [alignInk, motion]);
 
   // Re-measure once the webfont is swapped in, and whenever the title reflows.
   useEffect(() => {
@@ -108,8 +110,9 @@ export default function ScanlineTitle({
       wrap.style.setProperty("--scan", pct + "%");
     };
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setScan(100);
+      setScrubbable(false);
       return;
     }
 
@@ -133,14 +136,15 @@ export default function ScanlineTitle({
     return () => {
       sweep.pause();
       delete wrap.dataset.scanning;
+      setScan(100);
     };
-  }, []);
+  }, [motion]);
 
   // Once the opening pass is done the head tracks the pointer across the title.
   // A touch device has no hovering cursor to track, so there the title replays
   // the sweep when it is tapped instead.
   useEffect(() => {
-    if (!scrubbable) return;
+    if (!scrubbable || prefersReducedMotion()) return;
     const wrap = wrapRef.current;
     if (!wrap) return;
 
@@ -216,7 +220,7 @@ export default function ScanlineTitle({
       document.removeEventListener("pointerleave", onLeave);
       wrap.removeEventListener("pointerleave", onLeave);
     };
-  }, [scrubbable]);
+  }, [scrubbable, motion]);
 
   return (
     <span

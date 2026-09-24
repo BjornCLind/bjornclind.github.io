@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { animate, createDrawable, createSpring, morphTo, stagger, utils } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 export type GlyphKind = "rag" | "scan" | "records";
 
@@ -44,11 +45,12 @@ const ROWS = [
  */
 export default function ProjectGlyph({ kind }: { kind: GlyphKind }) {
   const ref = useRef<SVGSVGElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const svg = ref.current;
     if (!svg) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
 
     let activate: () => void;
     let deactivate: () => void;
@@ -145,7 +147,7 @@ export default function ProjectGlyph({ kind }: { kind: GlyphKind }) {
       row?.removeEventListener("focusin", on);
       row?.removeEventListener("focusout", off);
     };
-  }, [kind]);
+  }, [kind, motion]);
 
   return (
     <svg

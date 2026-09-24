@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { createAnimatable } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 const PULL = 0.3; // share of the pointer's offset the element follows
 const REACH = 36; // px beyond the element's edge that still attracts it
@@ -13,11 +14,12 @@ const REACH = 36; // px beyond the element's edge that still attracts it
  */
 export default function Magnetic({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLSpanElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const pull = createAnimatable(el, { x: 550, y: 550, ease: "out(3)" });
@@ -48,7 +50,7 @@ export default function Magnetic({ children }: { children: React.ReactNode }) {
       window.removeEventListener("pointermove", onMove);
       el.style.transform = "";
     };
-  }, []);
+  }, [motion]);
 
   return (
     <span ref={ref} className="inline-block will-change-transform">

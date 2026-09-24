@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { createDrawable, createTimeline, morphTo, stagger, utils } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 /**
  * Schematic side profile, drawn as six open strokes rather than one closed
@@ -72,6 +73,7 @@ const ACCENT = "#CBACF9";
  */
 export default function SchemaMorph({ className }: { className?: string }) {
   const rootRef = useRef<SVGSVGElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -82,7 +84,7 @@ export default function SchemaMorph({ className }: { className?: string }) {
     const dividers = Array.from(root.querySelectorAll<SVGPathElement>("[data-divider]"));
     const text = Array.from(root.querySelectorAll<SVGTextElement>("[data-cell]"));
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       // Land on the finished table with nothing moving.
       strokes.forEach((el, i) => {
         el.setAttribute("d", target(ROW_Y[i]));
@@ -164,7 +166,7 @@ export default function SchemaMorph({ className }: { className?: string }) {
       io.disconnect();
       tl.pause();
     };
-  }, []);
+  }, [motion]);
 
   return (
     <svg

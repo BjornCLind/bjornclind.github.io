@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { animate, createAnimatable, stagger } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 const GLYPHS = "abcdefghijklmnopqrstuvwxyz#%&*+=/<>";
 const LIFT = 14; // px a letter rises when the pointer is right on it
@@ -29,11 +30,12 @@ export default function HeroHeadline({
   className?: string;
 }) {
   const visualRef = useRef<HTMLSpanElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const visual = visualRef.current;
     if (!visual) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
 
     const chars = Array.from(visual.querySelectorAll<HTMLElement>("[data-ch]"));
     const accentChars = chars.filter((c) => c.dataset.accent === "true");
@@ -159,7 +161,7 @@ export default function HeroHeadline({
     }
 
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [motion]);
 
   const renderWords = (text: string, isAccent: boolean) =>
     text.split(" ").map((word, w, all) => (

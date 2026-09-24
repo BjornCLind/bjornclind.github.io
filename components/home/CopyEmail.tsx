@@ -10,17 +10,18 @@ const EMAIL = "bjornlndq@proton.me";
  * top, for people who would rather paste it somewhere.
  */
 export default function CopyEmail() {
-  const [copied, setCopied] = useState(false);
+  const [result, setResult] = useState<"idle" | "copied" | "failed">("idle");
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
+      setResult("copied");
     } catch {
       // Clipboard can be refused (permissions, insecure context); the mailto
-      // link beside this still works.
+      // link beside this still works, and the visitor is told.
+      setResult("failed");
     }
+    window.setTimeout(() => setResult("idle"), 2400);
   };
 
   return (
@@ -36,8 +37,22 @@ export default function CopyEmail() {
         onClick={copy}
         className="rounded-full border border-white/15 px-5 py-3 text-sm text-white-100 transition hover:border-white/40 hover:text-white"
       >
-        <span aria-live="polite">{copied ? "Copied" : "Copy address"}</span>
+        {result === "copied" ? "Copied" : "Copy address"}
       </button>
+      {/* The outcome is announced here rather than through the button. It is
+          always in the DOM, since a live region added together with its
+          message is often missed. Success already shows on the button;
+          failure is shown here as well. */}
+      <p
+        role="status"
+        className={result === "failed" ? "basis-full text-sm text-white-200" : "sr-only"}
+      >
+        {result === "copied"
+          ? "Email address copied to the clipboard."
+          : result === "failed"
+            ? "Couldn't copy. The address is " + EMAIL + "."
+            : ""}
+      </p>
     </div>
   );
 }

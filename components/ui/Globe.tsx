@@ -193,7 +193,7 @@ export function Globe({ globeConfig, data, still = false }: WorldProps & { still
       startAnimation();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globeData]);
+  }, [globeData, still]);
 
   const startAnimation = () => {
     if (!globeRef.current || !globeData) return;
@@ -207,10 +207,11 @@ export function Globe({ globeConfig, data, still = false }: WorldProps & { still
       .arcColor((e: object) => (e as { color: string }).color)
       .arcAltitude((e) => (e as { arcAlt: number }).arcAlt * 1)
       .arcStroke(() => [0.32, 0.28, 0.3][Math.round(Math.random() * 2)])
-      .arcDashLength(defaultProps.arcLength)
-      .arcDashInitialGap((e) => (e as { order: number }).order * 1)
-      .arcDashGap(15)
-      .arcDashAnimateTime(() => defaultProps.arcTime);
+      // Still: the arcs are drawn whole rather than travelling.
+      .arcDashLength(still ? 1 : defaultProps.arcLength)
+      .arcDashInitialGap(still ? () => 0 : (e) => (e as { order: number }).order * 1)
+      .arcDashGap(still ? 0 : 15)
+      .arcDashAnimateTime(() => (still ? 0 : defaultProps.arcTime));
 
     // Points need lat/lng. They were being given the arcs, which have none,
     // so every point sat at NaN -- the "Computed radius is NaN" error the
@@ -234,6 +235,10 @@ export function Globe({ globeConfig, data, still = false }: WorldProps & { still
 
   useEffect(() => {
     if (!globeRef.current || !globeData) return;
+    if (still) {
+      globeRef.current.ringsData([]);
+      return;
+    }
 
     const interval = setInterval(() => {
       if (!globeRef.current || !globeData) return;
@@ -251,7 +256,7 @@ export function Globe({ globeConfig, data, still = false }: WorldProps & { still
     return () => {
       clearInterval(interval);
     };
-  }, [globeData]);
+  }, [globeData, still]);
 
   // Sweep: ease between the two longitudes, dwelling at each end. Starts at
   // the midpoint, and lets go while the visitor is dragging the globe.
@@ -313,6 +318,16 @@ export function World({
     return s;
   }, []);
   const camera = useMemo(() => new PerspectiveCamera(50, aspect, 180, 1800), []);
+  // A still globe renders on demand, but the country outlines arrive a
+  // moment after the first frame. Keep rendering briefly so the still frame
+  // is the finished globe rather than an empty sphere.
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    setSettled(false);
+    if (!still) return;
+    const t = window.setTimeout(() => setSettled(true), 2500);
+    return () => window.clearTimeout(t);
+  }, [still]);
 
   return (
     <Canvas
@@ -322,7 +337,7 @@ export function World({
       // pixels on many phones for no visible gain.
       dpr={[1, 2]}
       gl={{ alpha: true }}
-      frameloop={paused ? "never" : still ? "demand" : "always"}
+      frameloop={paused ? "never" : still && settled ? "demand" : "always"}
     >
       <ambientLight color={globeConfig.ambientLight} intensity={0.6} />
       <directionalLight

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { animate } from "animejs";
 
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
+
 import PixelSprite from "./PixelSprite";
 import { SPRITE_H, SPRITE_W, type FrameName } from "./sprite";
 
@@ -343,7 +345,8 @@ function Walker({ scale, fine, still }: { scale: number; fine: boolean; still: b
 /**
  * A pixel version of Bjorn that follows the reader around the site.
  *
- * It never takes pointer events, so it cannot block a click. He starts
+ * It never takes pointer events, so it cannot block a click, and the pause
+ * button beside him stands him still in his corner. He starts
  * switched off and appears from the button in the corner -- a companion that
  * follows the cursor is charming until it is not, and that call belongs to
  * the visitor. The choice is remembered.
@@ -352,16 +355,20 @@ export default function Companion() {
   const [ready, setReady] = useState(false);
   const [on, setOn] = useState(false);
   const [env, setEnv] = useState({ scale: 3, fine: true, still: false });
+  const motion = useMotionSetting();
 
   useEffect(() => {
     setOn(readPref());
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
     setEnv({
       scale: window.innerWidth < 640 ? 2.5 : 3,
       fine: window.matchMedia("(hover: hover) and (pointer: fine)").matches,
-      still: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      still: prefersReducedMotion(),
     });
-    setReady(true);
-  }, []);
+  }, [motion]);
 
   if (!ready) return null;
 
@@ -378,13 +385,16 @@ export default function Companion() {
       <button
         type="button"
         onClick={toggle}
+        // The name stays put and aria-pressed carries the state, so a screen
+        // reader hears "Pixel Bjorn, toggle button, pressed / not pressed".
         aria-pressed={on}
-        aria-label={on ? "Hide pixel Bjorn" : "Show pixel Bjorn"}
+        aria-label="Pixel Bjorn"
         title={on ? "Hide pixel Bjorn" : "Show pixel Bjorn"}
-        className="fixed bottom-4 left-4 z-40 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-black-100/80 backdrop-blur transition hover:border-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple"
-        style={{ opacity: on ? 1 : 0.55 }}
+        className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/25 bg-black-100/80 backdrop-blur transition hover:border-white/50 aria-pressed:border-purple"
       >
-        <PixelSprite scale={1.6} crop={{ x: 2, y: 0, w: 12, h: 13 }} />
+        <span className={on ? undefined : "opacity-70"}>
+          <PixelSprite scale={1.6} crop={{ x: 2, y: 0, w: 12, h: 13 }} />
+        </span>
       </button>
     </>
   );

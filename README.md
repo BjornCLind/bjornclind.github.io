@@ -48,6 +48,26 @@ tabs). A print rule shows everything.
 
 Vercel Speed Insights is enabled, so regressions show up in the dashboard.
 
+## Accessibility
+
+The site targets WCAG 2.2 AA; the public statement is at
+[`/accessibility`](app/accessibility/page.tsx). What keeps it there:
+
+- **Motion** goes through [`lib/motion.ts`](lib/motion.ts). The effective
+  setting is on `<html data-motion>`, set before first paint from the
+  visitor's choice or their system preference. Anything that animates reads
+  `prefersReducedMotion()` and lists `useMotionSetting()` in its effect's
+  dependencies, so the pause button in the corner stops it live. CSS
+  animation keys off `html[data-motion="reduced"]`. Anything that moves for
+  more than five seconds must honour this.
+- **Decoration** is `aria-hidden`, and anything it conveys is also in text.
+- **Focus** uses the global `:focus-visible` ring in `globals.css`; do not
+  add `outline-none` without a replacement. `scroll-padding` keeps focused
+  elements clear of the sticky header and the corner buttons.
+- **Contrast**: body text on `black-100` should not go below
+  `text-white-200/70`.
+- `eslint-plugin-jsx-a11y`'s recommended rules run in `npm run lint`.
+
 ## Project structure
 
 ```
@@ -56,9 +76,10 @@ app/projects/[slug]/    # Project detail pages, generated from data/index.ts
 components/companion/   # Pixel Bjorn: sprite data, renderer, follow behaviour
 components/home/        # Homepage client pieces: headline, reveals, previews
 components/ui/          # Visuals: contact globe, neural field, scan title, schema morph
+components/MotionToggle.tsx # The site-wide pause button
 data/index.ts           # Site content: projects, experience, education, skills
 data/globe.json         # Country outlines for the globe
-lib/                    # Shared helpers (canonical URL, classnames)
+lib/                    # Shared helpers (canonical URL, motion setting, classnames)
 scripts/sprite.py       # Pixel Bjorn's frames; regenerates the sprite data
 ```
 

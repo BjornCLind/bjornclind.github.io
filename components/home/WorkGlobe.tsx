@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
 import type { GlobeConfig, Position } from "@/components/ui/Globe";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 // three.js and the country geometry are several hundred kB, so the globe is
 // only fetched once the reader is near the bottom of the page.
@@ -112,6 +113,15 @@ export default function WorkGlobe() {
   const [visible, setVisible] = useState(false);
   const [capable, setCapable] = useState(true);
   const [still, setStill] = useState(false);
+  // Drag-to-spin only where there is a mouse. On a touch screen the globe
+  // spans the page width, and a canvas that captures touches would stop the
+  // reader scrolling past it.
+  const [draggable, setDraggable] = useState(false);
+  const motion = useMotionSetting();
+
+  useEffect(() => {
+    setStill(prefersReducedMotion());
+  }, [motion]);
 
   useEffect(() => {
     const el = ref.current;
@@ -120,7 +130,7 @@ export default function WorkGlobe() {
       setCapable(false);
       return;
     }
-    setStill(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setDraggable(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
 
     // Load well before it arrives; render only while it is actually on
     // screen, so an off-screen globe costs no frames.
@@ -149,7 +159,11 @@ export default function WorkGlobe() {
       <div
         ref={ref}
         aria-hidden="true"
-        className="relative mx-auto aspect-square w-full max-w-[26rem] [mask-image:radial-gradient(circle_at_center,black_58%,transparent_72%)]"
+        className={
+          "relative mx-auto aspect-square w-full max-w-[26rem] [mask-image:radial-gradient(circle_at_center,black_58%,transparent_72%)]" +
+          // The canvas wrapper sets pointer-events inline, hence the !important.
+          (draggable ? "" : " pointer-events-none [&_*]:!pointer-events-none")
+        }
       >
         {capable && mounted && (
           <World data={ARCS} globeConfig={CONFIG} paused={!visible} still={still} />

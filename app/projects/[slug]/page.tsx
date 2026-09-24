@@ -36,7 +36,11 @@ export default function ProjectPage({ params }: Params) {
   if (!project) notFound();
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black-100 px-5 sm:px-10">
+    <main
+      id="main"
+      tabIndex={-1}
+      className="relative min-h-screen overflow-hidden bg-black-100 px-5 sm:px-10"
+    >
       {project.visual && <ProjectVisual name={project.visual} />}
 
       <div className="relative mx-auto flex justify-center">
@@ -51,11 +55,11 @@ export default function ProjectPage({ params }: Params) {
           )}
           <ProjectIntro>
             <Link
-              href="/#projects"
+              href="/#work"
               data-reveal
               className="inline-block text-sm text-purple underline underline-offset-4"
             >
-              &larr; Back to projects
+              <span aria-hidden="true">&larr; </span>Back to projects
             </Link>
 
             <h1

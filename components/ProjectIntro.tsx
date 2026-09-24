@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { animate, stagger } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 /**
  * Staggered entrance for a project page's content. Falls back to simply being
@@ -14,11 +15,12 @@ export default function ProjectIntro({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
 
     const targets = Array.from(
       root.querySelectorAll<HTMLElement>("[data-reveal]")
@@ -56,7 +58,7 @@ export default function ProjectIntro({
         el.style.transform = "";
       });
     };
-  }, []);
+  }, [motion]);
 
   return <div ref={ref}>{children}</div>;
 }

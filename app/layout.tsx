@@ -7,6 +7,8 @@ import "./globals.css";
 import { ThemeProvider } from "./provider";
 import { siteUrl } from "@/lib/site";
 import CompanionLoader from "@/components/companion/CompanionLoader";
+import MotionToggle from "@/components/MotionToggle";
+import { MOTION_BOOT } from "@/lib/motion";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,8 +58,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.jpg" sizes="any" />
+        <script dangerouslySetInnerHTML={{ __html: MOTION_BOOT }} />
       </head>
       <body className={inter.className}>
+        <a
+          href="#main"
+          className="sr-only rounded-full bg-white text-sm font-medium text-black-100 focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:px-5 focus:py-2.5"
+        >
+          Skip to content
+        </a>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -65,7 +74,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <CompanionLoader />
+          <aside
+            aria-label="Display preferences"
+            className="fixed bottom-4 left-4 flex items-center gap-2 print:hidden"
+          >
+            <MotionToggle />
+            <CompanionLoader />
+          </aside>
         </ThemeProvider>
         {onVercel && <SpeedInsights />}
       </body>

@@ -68,13 +68,35 @@
 
 @layer base {
   * {
-    @apply border-border !scroll-smooth;
+    @apply border-border;
+  }
+  html {
+    /* Keeps keyboard focus scrolled into view clear of the sticky header and
+       of the buttons in the bottom corner (WCAG 2.4.11). The top also sets
+       where anchor jumps land. */
+    scroll-padding-top: 6rem;
+    scroll-padding-bottom: 5rem;
+  }
+  /* Smooth scrolling is motion too: only when it has not been turned off. */
+  html[data-motion="full"] {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html:not([data-motion]) {
+      scroll-behavior: smooth;
+    }
   }
   body {
     @apply bg-background text-foreground;
   }
-  button {
-    @apply active:outline-none;
+  /* One focus ring for every control, visible on the dark page. */
+  :focus-visible {
+    outline: 2px solid #cbacf9;
+    outline-offset: 3px;
+  }
+  /* Programmatic focus targets such as the skip link's destination. */
+  [tabindex="-1"]:focus {
+    outline: none;
   }
 }
 
@@ -152,8 +174,11 @@
     opacity: 1;
   }
 
+  html[data-motion="reduced"] .scanline-title__head {
+    display: none;
+  }
   @media (prefers-reduced-motion: reduce) {
-    .scanline-title__head {
+    html:not([data-motion]) .scanline-title__head {
       display: none;
     }
   }
@@ -229,8 +254,12 @@
     }
   }
 
+  html[data-motion="reduced"] .microfilm-sweep {
+    animation: none;
+    opacity: 0.4;
+  }
   @media (prefers-reduced-motion: reduce) {
-    .microfilm-sweep {
+    html:not([data-motion]) .microfilm-sweep {
       animation: none;
       opacity: 0.4;
     }
@@ -257,8 +286,7 @@
 }
 
 @media print {
-  .companion-walker,
-  [aria-label$="pixel Bjorn"] {
+  .companion-walker {
     display: none !important;
   }
 }

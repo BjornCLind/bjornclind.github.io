@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { animate, createTimer, stagger } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 type Node = {
   x: number;
@@ -36,6 +37,7 @@ const COLOR_HOT = "203, 172, 249"; // purple
  */
 export default function NeuralField({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -43,9 +45,7 @@ export default function NeuralField({ className }: { className?: string }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const reduceMotion = prefersReducedMotion();
     // Phones and tablets have no hovering cursor, so there is nothing to drive
     // the query point. On those the query moves itself, and a tap re-aims it.
     const noHover = window.matchMedia("(hover: none)").matches;
@@ -347,7 +347,7 @@ export default function NeuralField({ className }: { className?: string }) {
       window.removeEventListener("pointercancel", onPointerUp);
       document.removeEventListener("pointerleave", onPointerLeave);
     };
-  }, []);
+  }, [motion]);
 
   // Pointer handling lives on the window, so the canvas itself never needs to
   // receive events and must not sit in front of the article.

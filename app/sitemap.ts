@@ -11,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
+    {
+      url: `${siteUrl}/accessibility`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
     ...projects.map((project) => ({
       url: `${siteUrl}/projects/${project.slug}`,
       lastModified: new Date(),

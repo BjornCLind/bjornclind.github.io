@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { animate, stagger } from "animejs";
+import { prefersReducedMotion, useMotionSetting } from "@/lib/motion";
 
 /**
  * Fades and lifts its `[data-reveal]` descendants in as the section scrolls
@@ -29,11 +30,12 @@ export default function Reveal({
   id?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const motion = useMotionSetting();
 
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
 
     const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-reveal]"));
     if (targets.length === 0) return;
@@ -105,7 +107,7 @@ export default function Reveal({
       timers.forEach((t) => window.clearTimeout(t));
       settle(below);
     };
-  }, []);
+  }, [motion]);
 
   return (
     <Tag
