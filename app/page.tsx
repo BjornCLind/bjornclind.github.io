@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 import CopyEmail from "@/components/home/CopyEmail";
+import HeroHeadline from "@/components/home/HeroHeadline";
+import Magnetic from "@/components/home/Magnetic";
+import ProjectGlyph from "@/components/home/ProjectGlyph";
 import Reveal from "@/components/home/Reveal";
 import {
   education,
@@ -66,13 +69,11 @@ export default function Home() {
           >
             Full stack engineer · Web systems analyst
           </p>
-          <h1
-            data-reveal
+          <HeroHeadline
+            lead="Web systems that turn paper processes into"
+            accent="software people use."
             className="mt-6 max-w-4xl text-[2.6rem] font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl"
-          >
-            Web systems that turn paper processes into{" "}
-            <span className="text-purple">software people use.</span>
-          </h1>
+          />
           <p
             data-reveal
             className="mt-8 max-w-2xl text-lg leading-relaxed text-white-200"
@@ -82,18 +83,22 @@ export default function Home() {
             hosted language models behind them.
           </p>
           <div data-reveal className="mt-10 flex flex-wrap gap-3">
-            <a
-              href="#work"
-              className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black-100 transition hover:bg-purple"
-            >
-              View selected work
-            </a>
-            <a
-              href="#contact"
-              className="rounded-full border border-white/15 px-6 py-3 text-sm text-white-100 transition hover:border-white/40 hover:text-white"
-            >
-              Get in touch
-            </a>
+            <Magnetic>
+              <a
+                href="#work"
+                className="inline-block rounded-full bg-white px-6 py-3 text-sm font-medium text-black-100 transition-colors hover:bg-purple"
+              >
+                View selected work
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href="#contact"
+                className="inline-block rounded-full border border-white/15 px-6 py-3 text-sm text-white-100 transition-colors hover:border-white/40 hover:text-white"
+              >
+                Get in touch
+              </a>
+            </Magnetic>
           </div>
         </Reveal>
 
@@ -110,7 +115,7 @@ export default function Home() {
               <li key={project.slug} data-reveal className="border-b border-white/10">
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="group grid gap-x-8 gap-y-4 py-9 outline-none sm:grid-cols-[3.5rem_1fr_auto] focus-visible:bg-white/[0.03]"
+                  className="group relative grid gap-x-8 gap-y-4 py-9 outline-none sm:grid-cols-[3.5rem_1fr_auto] focus-visible:bg-white/[0.03]"
                 >
                   <span className="font-mono text-sm text-white-200/50">
                     {String(i + 1).padStart(2, "0")}
@@ -133,12 +138,15 @@ export default function Home() {
                       ))}
                     </ul>
                   </div>
-                  <span
-                    aria-hidden="true"
-                    className="hidden self-center text-2xl text-white-200/60 transition group-hover:translate-x-1 group-hover:text-purple sm:block"
-                  >
-                    &rarr;
-                  </span>
+                  <div className="absolute right-0 top-9 flex items-center gap-6 sm:static sm:self-center">
+                    <ProjectGlyph kind={project.glyph} />
+                    <span
+                      aria-hidden="true"
+                      className="hidden text-2xl text-white-200/60 transition group-hover:translate-x-1 group-hover:text-purple sm:block"
+                    >
+                      &rarr;
+                    </span>
+                  </div>
                 </Link>
               </li>
             ))}

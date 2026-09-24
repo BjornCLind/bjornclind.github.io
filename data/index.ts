@@ -45,6 +45,8 @@ export type Project = {
   detail: string[];
   /** Optional decorative visual rendered behind the page header. */
   visual?: "neural-field" | "microfilm";
+  /** Small animated preview shown on the project's homepage row. */
+  glyph: "rag" | "scan" | "records";
   /** Narrative scene rendered below the page content. */
   scene?: "records-pipeline";
   /** Transcribes the title from handwriting into type on arrival. */
@@ -55,6 +57,7 @@ export const projects: Project[] = [
   {
     id: 1,
     slug: "policy-analyzer",
+    glyph: "rag",
     title: "Policy Analyzer",
     des: "Retrieval-augmented search over a large policy corpus, letting staff ask plain-language questions and get answers grounded in the source documents.",
     tech: ["Qwen3", "ChromaDB", "RAG", "Python"],
@@ -69,6 +72,7 @@ export const projects: Project[] = [
   {
     id: 2,
     slug: "microfilm-digitization",
+    glyph: "scan",
     title: "Microfilm Digitization of Handwritten Reports",
     des: "Fine-tuned a vision-language model with LoRA to transcribe handwritten reports from digitized microfilm, turning scanned archives into searchable text.",
     tech: ["Qwen3-VL", "LoRA", "Vision-Language", "Python"],
@@ -84,6 +88,7 @@ export const projects: Project[] = [
   {
     id: 3,
     slug: "firearms-qualification-records",
+    glyph: "records",
     title: "Firearms Qualification Records",
     des: "Centralized database and management interface replacing scattered recordkeeping, with structured entry, lookup and reporting in one place.",
     tech: ["Laravel", "SQL", "Web App"],
