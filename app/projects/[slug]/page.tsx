@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 
 import ProjectIntro from "@/components/ProjectIntro";
 import ProjectVisual from "@/components/ProjectVisual";
+import ScanlineTitle from "@/components/ui/ScanlineTitle";
 import { projects } from "@/data";
+import { handwriting } from "@/lib/fonts";
 
 type Params = { params: { slug: string } };
 
@@ -40,7 +42,7 @@ export default function ProjectPage({ params }: Params) {
         <article className="relative w-full max-w-3xl py-24 sm:py-32">
           {/* Holds text contrast against the field without hiding it: the
               column is dimmed, the margins stay clear. */}
-          {project.visual && (
+          {project.visual === "neural-field" && (
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -inset-x-8 -inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,3,25,0.92)_0%,rgba(0,3,25,0.75)_55%,transparent_100%)]"
@@ -59,7 +61,14 @@ export default function ProjectPage({ params }: Params) {
               data-reveal
               className="mt-8 text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
             >
-              {project.title}
+              {project.titleEffect === "scan" ? (
+                <ScanlineTitle
+                  text={project.title}
+                  handwritingClassName={handwriting.className}
+                />
+              ) : (
+                project.title
+              )}
             </h1>
 
             <p data-reveal className="mt-3 text-sm text-white-200">
@@ -84,11 +93,19 @@ export default function ProjectPage({ params }: Params) {
               ))}
             </ul>
 
-            {project.visual && (
+            {project.visual === "neural-field" && (
               <p data-reveal className="mt-8 text-xs text-white-200/70">
                 The field behind this page is the retrieval step: your cursor
                 is the query, and the chunks nearest it light up and link in.
                 Drag one to throw it.
+              </p>
+            )}
+
+            {project.titleEffect === "scan" && (
+              <p data-reveal className="mt-8 text-xs text-white-200/70">
+                The title above arrives as handwriting and is transcribed left
+                to right. Move your cursor across it to drive the scanner head
+                yourself.
               </p>
             )}
 

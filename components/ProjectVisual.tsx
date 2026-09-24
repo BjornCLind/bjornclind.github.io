@@ -6,9 +6,11 @@ import dynamic from "next/dynamic";
 // only for projects that declare a visual, so they stay out of every other
 // chunk.
 const NeuralField = dynamic(() => import("./ui/NeuralField"), { ssr: false });
+const MicrofilmBackdrop = dynamic(() => import("./ui/MicrofilmBackdrop"));
 
 const VISUALS = {
   "neural-field": NeuralField,
+  microfilm: MicrofilmBackdrop,
 } as const;
 
 export type VisualKey = keyof typeof VISUALS;

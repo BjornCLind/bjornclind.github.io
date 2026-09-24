@@ -83,3 +83,104 @@
     @apply font-bold text-4xl md:text-5xl text-center;
   }
 }
+
+@layer components {
+  /* Title that is transcribed from handwriting to type by a scanner head.
+     --scan is the head position: everything left of it is digitized. */
+  .scanline-title {
+    position: relative;
+    display: block;
+  }
+
+  /* The typed layer defines the box, so there is no layout shift when the
+     handwriting is swapped out. */
+  .scanline-title__type {
+    display: block;
+    clip-path: inset(0 calc(100% - var(--scan, 100%)) 0 0);
+  }
+
+  .scanline-title__ink {
+    position: absolute;
+    inset: 0;
+    display: block;
+    color: #d8dcf0;
+    /* Caveat sits small and tight next to Inter at the same size, so it is
+       scaled up. overflow is clipped to the typed layer's box: the two faces
+       wrap at different points, and without this the handwriting spills onto
+       the line below the title. */
+    font-size: 1.14em;
+    line-height: 0.9;
+    overflow: hidden;
+    clip-path: inset(0 0 0 var(--scan, 100%));
+  }
+
+  .scanline-title__head {
+    position: absolute;
+    top: -0.18em;
+    bottom: -0.18em;
+    left: var(--scan, 100%);
+    width: 2px;
+    margin-left: -1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      #cbacf9 18%,
+      #ffffff 50%,
+      #cbacf9 82%,
+      transparent
+    );
+    box-shadow: 0 0 14px 3px rgba(203, 172, 249, 0.55);
+    opacity: 0;
+    transition: opacity 220ms ease;
+  }
+
+  .scanline-title[data-scanning="true"] .scanline-title__head {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scanline-title__head {
+      display: none;
+    }
+  }
+
+  /* Microfilm backdrop: fine scan lines with a highlight band drifting down,
+     like film advancing past a head. */
+  .microfilm-lines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(190, 193, 221, 0.05) 0px,
+      rgba(190, 193, 221, 0.05) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  }
+
+  .microfilm-sweep {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(203, 172, 249, 0.07) 45%,
+      rgba(203, 172, 249, 0.12) 50%,
+      rgba(203, 172, 249, 0.07) 55%,
+      transparent 100%
+    );
+    animation: microfilm-advance 9s linear infinite;
+  }
+
+  @keyframes microfilm-advance {
+    from {
+      transform: translateY(-60%);
+    }
+    to {
+      transform: translateY(160%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .microfilm-sweep {
+      animation: none;
+      opacity: 0.4;
+    }
+  }
+}

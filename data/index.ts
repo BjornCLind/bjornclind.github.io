@@ -127,7 +127,9 @@ export type Project = {
   context: string;
   detail: string[];
   /** Optional decorative visual rendered behind the page header. */
-  visual?: "neural-field";
+  visual?: "neural-field" | "microfilm";
+  /** Transcribes the title from handwriting into type on arrival. */
+  titleEffect?: "scan";
 };
 
 export const projects: Project[] = [
@@ -152,6 +154,8 @@ export const projects: Project[] = [
     des: "Fine-tuned a vision-language model with LoRA to transcribe handwritten reports from digitized microfilm, turning scanned archives into searchable text.",
     tech: ["Qwen3-VL", "LoRA", "Vision-Language", "Python"],
     context: "Internal tool, not publicly accessible",
+    visual: "microfilm",
+    titleEffect: "scan",
     detail: [
       "General-purpose OCR handles printed text well and decades-old handwriting on microfilm badly, which leaves a large archive effectively unsearchable.",
       "A vision-language model was fine-tuned with LoRA on representative pages, adapting it to the specific handwriting and scan quality without retraining the full model.",
