@@ -236,3 +236,12 @@
     }
   }
 }
+
+/* Scroll reveals hide content with inline styles until it is animated in.
+   Printing does not scroll or animate, so everything must be shown. */
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

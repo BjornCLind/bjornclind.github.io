@@ -222,3 +222,50 @@ export const experiences = [
     ],
   },
 ];
+
+/** Grouped for the homepage; drawn from the resume and the project work. */
+export const skills = [
+  {
+    group: "Frontend",
+    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Accessibility"],
+  },
+  {
+    group: "Backend & data",
+    items: ["Laravel", "Node.js", "SQL", "MongoDB", "Python", "REST APIs"],
+  },
+  {
+    group: "Platforms",
+    items: ["Power BI", "Power Automate", "SharePoint", "Content management"],
+  },
+  {
+    group: "Infrastructure",
+    items: ["Docker", "GitLab CI/CD", "IIS", "Linux"],
+  },
+  {
+    group: "Applied AI",
+    items: ["Local LLMs", "Retrieval (RAG)", "LoRA fine-tuning", "Vision-language models"],
+  },
+];
+
+export const spokenLanguages = [
+  "English (fluent)",
+  "Swedish (fluent)",
+  "Hungarian (fluent)",
+  "Spanish (conversational)",
+];
+
+/** How the work is approached; shown as three short principles. */
+export const principles = [
+  {
+    title: "Understand the process",
+    body: "I start with the people doing the work. Mapping the existing process, its constraints and what finished actually means is what stops a project from building the wrong thing well.",
+  },
+  {
+    title: "Weigh the options",
+    body: "Before committing, I compare the realistic approaches on cost, capacity and security, including whether to build at all, and put the trade-offs in front of stakeholders in plain language.",
+  },
+  {
+    title: "Build it to outlast me",
+    body: "Then I build and test it properly and make sure it keeps running without me: documentation, training for the people using it, and monitoring so problems surface before users report them.",
+  },
+];
