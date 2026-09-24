@@ -37,7 +37,15 @@ export default function ProjectPage({ params }: Params) {
       {project.visual && <ProjectVisual name={project.visual} />}
 
       <div className="relative mx-auto flex justify-center">
-        <article className="w-full max-w-3xl py-24 sm:py-32">
+        <article className="relative w-full max-w-3xl py-24 sm:py-32">
+          {/* Holds text contrast against the field without hiding it: the
+              column is dimmed, the margins stay clear. */}
+          {project.visual && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-8 -inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,3,25,0.92)_0%,rgba(0,3,25,0.75)_55%,transparent_100%)]"
+            />
+          )}
           <ProjectIntro>
             <Link
               href="/#projects"

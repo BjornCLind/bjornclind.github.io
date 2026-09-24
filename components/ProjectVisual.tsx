@@ -18,7 +18,7 @@ export default function ProjectVisual({ name }: { name: VisualKey }) {
   if (!Visual) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[85vh] overflow-hidden [mask-image:linear-gradient(to_bottom,black_55%,transparent)]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[115vh] overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_60%,transparent_100%)]">
       <Visual className="h-full w-full" />
     </div>
   );
