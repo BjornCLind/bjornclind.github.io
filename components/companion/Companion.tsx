@@ -29,11 +29,13 @@ const RUN_SPEED = 0.38;
 const RUN_BEYOND = 320; // px from the target before he breaks into a run
 const IDLE_WAVE_AFTER = 5000; // ms of a still pointer before he waves
 
+// Off unless the visitor has switched him on: he is a flourish, and the
+// portfolio should read without him.
 const readPref = () => {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) !== "off";
+    return window.localStorage.getItem(STORAGE_KEY) === "on";
   } catch {
-    return true;
+    return false;
   }
 };
 const writePref = (on: boolean) => {
@@ -341,13 +343,14 @@ function Walker({ scale, fine, still }: { scale: number; fine: boolean; still: b
 /**
  * A pixel version of Bjorn that follows the reader around the site.
  *
- * It never takes pointer events, so it cannot block a click, and it can be
- * switched off -- a companion that follows the cursor is charming until it is
- * not, and that call belongs to the visitor. The choice is remembered.
+ * It never takes pointer events, so it cannot block a click. He starts
+ * switched off and appears from the button in the corner -- a companion that
+ * follows the cursor is charming until it is not, and that call belongs to
+ * the visitor. The choice is remembered.
  */
 export default function Companion() {
   const [ready, setReady] = useState(false);
-  const [on, setOn] = useState(true);
+  const [on, setOn] = useState(false);
   const [env, setEnv] = useState({ scale: 3, fine: true, still: false });
 
   useEffect(() => {

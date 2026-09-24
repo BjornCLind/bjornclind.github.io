@@ -5,6 +5,7 @@ import HeroHeadline from "@/components/home/HeroHeadline";
 import Magnetic from "@/components/home/Magnetic";
 import ProjectGlyph from "@/components/home/ProjectGlyph";
 import Reveal from "@/components/home/Reveal";
+import WorkGlobe from "@/components/home/WorkGlobe";
 import {
   education,
   experiences,
@@ -281,19 +282,28 @@ export default function Home() {
         </Reveal>
 
         {/* ------------------------------------------------------------- Contact */}
-        <Reveal as="section" id="contact" className="scroll-mt-24 border-t border-white/10 py-20 sm:py-28">
-          <h2
-            data-reveal
-            className="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl"
-          >
-            Have a process that still runs on paper?{" "}
-            <span className="text-white-200">Let&apos;s talk.</span>
-          </h2>
-          <p data-reveal className="mt-6 text-white-200">
-            Email is the fastest way to reach me.
-          </p>
-          <div data-reveal className="mt-10">
-            <CopyEmail />
+        <Reveal
+          as="section"
+          id="contact"
+          className="scroll-mt-24 grid items-center gap-12 border-t border-white/10 py-20 sm:py-28 lg:grid-cols-[1.1fr_1fr]"
+        >
+          <div>
+            <h2
+              data-reveal
+              className="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl"
+            >
+              Have a process that still runs on paper?{" "}
+              <span className="text-white-200">Let&apos;s talk.</span>
+            </h2>
+            <p data-reveal className="mt-6 text-white-200">
+              Email is the fastest way to reach me.
+            </p>
+            <div data-reveal className="mt-10">
+              <CopyEmail />
+            </div>
+          </div>
+          <div data-reveal>
+            <WorkGlobe />
           </div>
         </Reveal>
       </main>

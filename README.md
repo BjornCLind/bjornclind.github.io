@@ -36,6 +36,10 @@ copy-email button ship JavaScript. The heavier visuals live on the project
 pages alone and are loaded with `next/dynamic`, so they never reach the
 homepage bundle. Keep it that way.
 
+The one exception is the globe in the contact section (three.js and the
+country data, well over a megabyte). It is fetched only when the reader scrolls
+near it, skipped without WebGL, and stops rendering while off screen.
+
 Scroll reveals hide content with inline styles until it is animated in, so
 they must never be the only way back to visible: a timer backstop and a
 per-batch deadline force the final state if animation frames or
@@ -51,8 +55,9 @@ app/                    # Routes, layout, metadata, sitemap, robots, OG image
 app/projects/[slug]/    # Project detail pages, generated from data/index.ts
 components/companion/   # Pixel Bjorn: sprite data, renderer, follow behaviour
 components/home/        # Homepage client pieces: headline, reveals, previews
-components/ui/          # Project page visuals (neural field, scan title, schema morph)
+components/ui/          # Visuals: contact globe, neural field, scan title, schema morph
 data/index.ts           # Site content: projects, experience, education, skills
+data/globe.json         # Country outlines for the globe
 lib/                    # Shared helpers (canonical URL, classnames)
 scripts/sprite.py       # Pixel Bjorn's frames; regenerates the sprite data
 ```
@@ -68,8 +73,9 @@ python scripts/sprite.py export components/companion/sprite.ts
 python scripts/sprite.py preview sprite.png   # optional, needs Pillow
 ```
 
-He never takes pointer events, stays out of print, and visitors can switch
-him off with the button in the bottom-left corner; the choice is remembered.
+He starts switched off: visitors turn him on with the button in the
+bottom-left corner, and the choice is remembered. He never takes pointer
+events and stays out of print.
 
 ## Content
 
