@@ -7,18 +7,19 @@ import ProjectGlyph from "@/components/home/ProjectGlyph";
 import Reveal from "@/components/home/Reveal";
 import WorkGlobe from "@/components/home/WorkGlobe";
 import {
+  capabilities,
   education,
   experiences,
-  principles,
   projects,
   skills,
   spokenLanguages,
 } from "@/data";
 
 const NAV = [
+  { href: "#skills", label: "Skills" },
   { href: "#work", label: "Work" },
   { href: "#experience", label: "Experience", wide: true },
-  { href: "#about", label: "About" },
+  { href: "#about", label: "About", wide: true },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -68,20 +69,21 @@ export default function Home() {
             data-reveal
             className="text-xs font-medium uppercase tracking-[0.14em] text-white-200/70 sm:tracking-[0.22em]"
           >
-            Full stack engineer · Web systems analyst
+            Full stack · UI/UX · Databases · Applied AI
           </p>
           <HeroHeadline
-            lead="Web systems that turn paper processes into"
-            accent="software people use."
+            lead="Full stack engineer building web systems from interface"
+            accent="to database."
             className="mt-6 max-w-4xl text-[2.6rem] font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl"
           />
           <p
             data-reveal
             className="mt-8 max-w-2xl text-lg leading-relaxed text-white-200"
           >
-            I&apos;m Bjorn Lindqvist. I design, build and maintain internal
-            portals, dashboards and document pipelines, and lately the locally
-            hosted language models behind them.
+            I&apos;m Bjorn Lindqvist. I design, build and maintain web
+            applications end to end, from the interface and data model to
+            automating older workflows, and now AI tools that assist people
+            rather than replace them.
           </p>
           <div data-reveal className="mt-10 flex flex-wrap gap-3">
             <Magnetic>
@@ -103,9 +105,38 @@ export default function Home() {
           </div>
         </Reveal>
 
+        {/* -------------------------------------------------------------- Skills */}
+        <Reveal as="section" id="skills" className="py-16 sm:py-24">
+          <SectionLabel n="01" title="What I do" />
+
+          <ul className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+            {capabilities.map((c, i) => (
+              <li key={c.title} data-reveal className="flex flex-col bg-black-100 p-7">
+                <span aria-hidden="true" className="font-mono text-sm text-purple">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-3 text-lg font-medium tracking-tight text-white">
+                  {c.title}
+                </h3>
+                <p className="mt-3 leading-relaxed text-white-200">{c.body}</p>
+                <ul className="mt-auto flex flex-wrap gap-2 pt-6" aria-label="Tools">
+                  {c.tools.map((t) => (
+                    <li
+                      key={t}
+                      className="rounded-full border border-white/10 px-3 py-1 text-xs text-white-100"
+                    >
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+
         {/* ---------------------------------------------------------------- Work */}
         <Reveal as="section" id="work" className="py-16 sm:py-24">
-          <SectionLabel n="01" title="Selected work" />
+          <SectionLabel n="02" title="Selected work" />
           <p data-reveal className="mt-6 max-w-2xl text-white-200">
             Most of what I build is internal and not publicly accessible, so
             each project is written up rather than linked.
@@ -166,7 +197,7 @@ export default function Home() {
 
         {/* ---------------------------------------------------------- Experience */}
         <Reveal as="section" id="experience" className="py-16 sm:py-24">
-          <SectionLabel n="02" title="Experience" />
+          <SectionLabel n="03" title="Experience" />
 
           <ol className="mt-12 space-y-14">
             {experiences.map((job) => {
@@ -206,23 +237,25 @@ export default function Home() {
 
         {/* --------------------------------------------------------------- About */}
         <Reveal as="section" id="about" className="py-16 sm:py-24">
-          <SectionLabel n="03" title="About" />
+          <SectionLabel n="04" title="About" />
 
           <div className="mt-12 grid gap-14 lg:grid-cols-[1fr_1.1fr]">
             <div data-reveal className="space-y-5 text-lg leading-relaxed text-white-200">
               <p>
-                I work across the stack and across the table: sitting down with
-                the people who use a system, then designing, building and
-                supporting it.
+                Full stack engineering has run through every role I&apos;ve
+                held, from product engineering in React, Next.js and TypeScript
+                to building and running a public-sector department&apos;s
+                internal systems.
               </p>
               <p>
-                Right now that means internal tools, reporting and applied AI
-                for a public-sector department. Before that it was full stack
-                product engineering in React, Next.js and TypeScript.
+                I&apos;m comfortable owning a system end to end: working out
+                requirements with the people who will use it, designing the
+                interface and the data model, shipping it, then keeping it
+                healthy and documented.
               </p>
               <p>
-                Flexible across time zones, and authorized to work in the US
-                and EU.
+                Based in Honolulu, flexible across time zones, and authorized
+                to work in the US and the EU.
               </p>
               <div className="pt-4 text-sm">
                 <p className="text-white-200/70">Languages</p>
@@ -243,9 +276,9 @@ export default function Home() {
           </div>
         </Reveal>
 
-        {/* ------------------------------------------------ Education & approach */}
+        {/* ----------------------------------------------------------- Education */}
         <Reveal as="section" id="education" className="py-16 sm:py-24">
-          <SectionLabel n="04" title="Education & certification" />
+          <SectionLabel n="05" title="Education & certification" />
 
           <ul className="mt-12 border-t border-white/10">
             {education.map((item) => {
@@ -274,23 +307,6 @@ export default function Home() {
           </ul>
         </Reveal>
 
-        <Reveal as="section" id="approach" className="py-16 sm:py-24">
-          <SectionLabel n="05" title="How I work" />
-          <ol className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
-            {principles.map((p, i) => (
-              <li key={p.title} data-reveal>
-                <span aria-hidden="true" className="font-mono text-sm text-purple">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 text-lg font-medium tracking-tight text-white">
-                  {p.title}
-                </h3>
-                <p className="mt-3 leading-relaxed text-white-200">{p.body}</p>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-
         {/* ------------------------------------------------------------- Contact */}
         <Reveal
           as="section"
@@ -302,11 +318,12 @@ export default function Home() {
               data-reveal
               className="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl"
             >
-              Have a process that still runs on paper?{" "}
+              Looking for a full stack engineer?{" "}
               <span className="text-white-200">Let&apos;s talk.</span>
             </h2>
             <p data-reveal className="mt-6 text-white-200">
-              Email is the fastest way to reach me.
+              A full résumé is available on request. Email is the fastest way
+              to reach me.
             </p>
             <div data-reveal className="mt-10">
               <CopyEmail />

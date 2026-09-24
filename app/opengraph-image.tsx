@@ -46,11 +46,11 @@ export default function OpengraphImage() {
             flexWrap: "wrap",
           }}
         >
-          Building End-to-End&nbsp;<span style={{ color: "#CBACF9" }}>Digital Solutions</span>
+          Full Stack Engineer,&nbsp;<span style={{ color: "#CBACF9" }}>interface to database</span>
         </div>
 
         <div style={{ marginTop: 36, fontSize: 30, color: "#C1C2D3" }}>
-          Full Stack Engineer · Web Systems · Data
+          Web development · UI/UX · Databases · Automation · Applied AI
         </div>
 
         <div

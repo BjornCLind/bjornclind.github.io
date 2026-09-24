@@ -114,7 +114,9 @@ export const experiences = [
       "Own site structure, interface and information architecture, translating business needs into self-service workflows that replace paper-driven processes.",
       "Audit enterprise content management systems and deliver retention analysis and platform recommendations to senior management.",
       "Build Power BI dashboards and data visualizations for a public-facing department website, and automate request intake and routing with Power Automate.",
+      "Develop locally hosted LLM tools for document retrieval and handwriting transcription, rolled out in stages with staff reviewing the output, so the time saved does not come at the cost of human judgement.",
       "Monitor and maintain internal web applications on GitLab CI/CD, Docker, IIS and Laravel, and uphold application and database security in a sensitive-data environment.",
+      "Write user guides and technical documentation for each system, so staff can self-serve and future analysts can take the work over.",
     ],
   },
   {
@@ -176,18 +178,36 @@ export const spokenLanguages = [
   "Spanish (conversational)",
 ];
 
-/** How the work is approached; shown as three short principles. */
-export const principles = [
+/** What I do: the disciplines, each with the tools it is mostly done in. */
+export const capabilities = [
   {
-    title: "Understand the process",
-    body: "I start with the people doing the work. Mapping the existing process, its constraints and what finished actually means is what stops a project from building the wrong thing well.",
+    title: "Full stack development",
+    body: "Web applications built front to back: responsive interfaces, APIs and server-side logic, taken through to deployment in production.",
+    tools: ["React", "Next.js", "TypeScript", "Laravel", "Node.js"],
   },
   {
-    title: "Weigh the options",
-    body: "Before committing, I compare the realistic approaches on cost, capacity and security, including whether to build at all, and put the trade-offs in front of stakeholders in plain language.",
+    title: "UI/UX design",
+    body: "Interfaces designed with the people who use them, from information architecture to self-service workflows and accessible front ends.",
+    tools: ["Information architecture", "Accessibility", "Tailwind CSS"],
   },
   {
-    title: "Build it to outlast me",
-    body: "Then I build and test it properly and make sure it keeps running without me: documentation, training for the people using it, and monitoring so problems surface before users report them.",
+    title: "Database design",
+    body: "Relational schemas with validation at entry, so the data stays consistent enough to report on and secure enough for sensitive environments.",
+    tools: ["SQL", "MongoDB", "Power BI"],
+  },
+  {
+    title: "Workflow automation & digitization",
+    body: "Older and paper-based processes mapped and rebuilt as software: structured intake, automated routing and searchable archives.",
+    tools: ["Power Automate", "SharePoint", "Python"],
+  },
+  {
+    title: "Applied AI",
+    body: "LLM tools rolled out in measured stages to assist people rather than replace them. A person stays in the loop to review, without giving back the time the model saves.",
+    tools: ["Local LLMs", "RAG", "LoRA fine-tuning"],
+  },
+  {
+    title: "Maintenance & documentation",
+    body: "I support what I ship: monitoring, deployments and security upkeep, plus documentation for users and for the analysts who take over after me.",
+    tools: ["GitLab CI/CD", "Docker", "IIS"],
   },
 ];

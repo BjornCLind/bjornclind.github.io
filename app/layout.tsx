@@ -13,8 +13,8 @@ import { MOTION_BOOT } from "@/lib/motion";
 const inter = Inter({ subsets: ["latin"] });
 
 const description =
-  "Portfolio of Bjorn Lindqvist, a full stack engineer who designs, builds " +
-  "and maintains web systems end to end.";
+  "Bjorn Lindqvist, full stack engineer: front-to-back web development, " +
+  "UI/UX and database design, workflow automation and applied AI.";
 
 export const metadata: Metadata = {
   // Required so the Open Graph/Twitter image paths below resolve to absolute URLs.
@@ -25,6 +25,10 @@ export const metadata: Metadata = {
     "Bjorn Lindqvist",
     "full stack engineer",
     "web systems analyst",
+    "UI/UX design",
+    "database design",
+    "workflow automation",
+    "applied AI",
     "Next.js",
     "React",
     "TypeScript",

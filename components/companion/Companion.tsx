@@ -15,11 +15,11 @@ const GREETED_KEY = "pixel-bjorn-greeted";
 /** One line per place, each said at most once per page view. */
 const LINES: Record<string, string> = {
   hero: "Hi, I'm Bjorn! 👋",
+  skills: "Front to back, and then some.",
   work: "Pick one. I built them all.",
   experience: "A lot of paper got retired here.",
   about: "Hej! Szia! ¡Hola!",
   education: "Always learning.",
-  approach: "Measure twice, ship once.",
   contact: "Go on, say hi!",
   "policy-analyzer": "It reads policy so you don't have to.",
   "microfilm-digitization": "Decades of handwriting, now searchable.",
