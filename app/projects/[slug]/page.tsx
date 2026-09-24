@@ -94,23 +94,6 @@ export default function ProjectPage({ params }: Params) {
               ))}
             </ul>
 
-            {project.visual === "neural-field" && (
-              <p data-reveal className="mt-8 text-xs text-white-200/70">
-                The field behind this page is the retrieval step: the query
-                point is your cursor, and the chunks nearest it light up and
-                link in. Drag a chunk to throw it. On a phone the query moves
-                on its own, and a tap re-aims it.
-              </p>
-            )}
-
-            {project.titleEffect === "scan" && (
-              <p data-reveal className="mt-8 text-xs text-white-200/70">
-                The title above arrives as handwriting and is transcribed left
-                to right. Move your cursor across it to drive the scanner head
-                yourself, or tap it on a phone to run the pass again.
-              </p>
-            )}
-
             <div
               data-reveal
               className="mt-12 space-y-5 border-t border-black-300 pt-10"
@@ -123,13 +106,9 @@ export default function ProjectPage({ params }: Params) {
             </div>
 
             {project.scene === "records-pipeline" && (
-              <figure data-reveal className="mt-14">
+              <div data-reveal className="mt-14">
                 <SchemaMorph className="w-full" />
-                <figcaption className="mt-3 text-xs text-white-200/70">
-                  The firearm is traced, then its strokes unravel into the rows
-                  of the table that records it. The entries are placeholders.
-                </figcaption>
-              </figure>
+              </div>
             )}
           </ProjectIntro>
         </article>

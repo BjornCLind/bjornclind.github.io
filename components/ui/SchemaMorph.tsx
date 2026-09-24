@@ -8,18 +8,36 @@ import { createDrawable, createTimeline, morphTo, stagger, utils } from "animejs
  * shape so each stroke can later become a row of the table.
  */
 const OUTLINE = [
-  // Slide, top edge into the muzzle
-  "M116 74 H366 L382 84",
-  // Muzzle face and underside of the slide
-  "M382 84 V102 H350",
-  // Slide underside back to the rear face
-  "M350 102 H150 V74",
-  // Frame and trigger guard
-  "M150 102 V124 H234 C234 158 298 158 298 124 H330 V102",
-  // Trigger
-  "M250 126 C250 144 266 146 268 130",
-  // Grip
-  "M150 124 L122 194 L168 206 L194 136",
+  // One continuous contour, split into six strokes so each has a row to
+  // become. They are ordered nose-to-tail, so tracing reads as a single pen
+  // travelling around the silhouette.
+  "M168 42 H452", // slide, top edge
+  "M452 42 V82 H440", // muzzle face, under the slide
+  "M440 82 V102 H330", // dust cover, underside of the frame
+  "M330 102 C330 146 262 148 252 110", // trigger guard
+  "M252 110 L226 188 L152 166", // front strap and magazine base
+  "M152 166 L176 86 L168 42", // backstrap, up to the rear of the slide
+];
+
+/**
+ * Interior detail. These trace on with the contour but do not morph: they
+ * fade as the unravel starts, so the detail is not dragged through the
+ * transition.
+ */
+const DETAIL = [
+  "M182 42 V32 H198 V42", // rear sight
+  "M432 42 V34 H444 V42", // front sight
+  "M176 82 H440", // slide-to-frame parting line
+  "M304 50 H372 V72 H304 Z", // ejection port
+  "M190 50 V76", // slide serrations
+  "M202 50 V76",
+  "M214 50 V76",
+  "M288 108 C288 128 302 130 304 114", // trigger
+  "M240 92 a7 7 0 1 0 0.1 0", // takedown pin
+  "M258 116 a5 5 0 1 0 0.1 0", // magazine release
+  "M196 120 L236 132", // grip texture
+  "M192 136 L232 148",
+  "M188 152 L228 164",
 ];
 
 /** Each stroke unravels into one horizontal rule of the table. */
@@ -60,9 +78,9 @@ export default function SchemaMorph({ className }: { className?: string }) {
     if (!root) return;
 
     const strokes = Array.from(root.querySelectorAll<SVGPathElement>("[data-stroke]"));
+    const detail = Array.from(root.querySelectorAll<SVGPathElement>("[data-detail]"));
     const dividers = Array.from(root.querySelectorAll<SVGPathElement>("[data-divider]"));
     const text = Array.from(root.querySelectorAll<SVGTextElement>("[data-cell]"));
-    const caption = root.querySelector<SVGTextElement>("[data-caption]");
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       // Land on the finished table with nothing moving.
@@ -71,18 +89,20 @@ export default function SchemaMorph({ className }: { className?: string }) {
         el.style.stroke = i === 0 ? ACCENT : INK;
         el.style.strokeOpacity = i === 0 ? "0.75" : "0.3";
       });
+      utils.set(detail, { opacity: 0 });
       utils.set(dividers, { opacity: 0.32 });
       utils.set(text, { opacity: 1 });
-      if (caption) utils.set(caption, { opacity: 0 });
       return;
     }
 
     utils.set(dividers, { opacity: 0 });
     utils.set(text, { opacity: 0 });
+    utils.set(detail, { opacity: 1 });
 
     // createDrawable exposes a `draw` property, so the outline can be drawn on
     // with stroke-dashoffset rather than simply faded in.
     const drawables = createDrawable(strokes);
+    const detailDrawables = createDrawable(detail);
 
     const tl = createTimeline({ loop: true, defaults: { ease: "inOutQuad" } });
 
@@ -98,12 +118,12 @@ export default function SchemaMorph({ className }: { className?: string }) {
       .set(strokes, { stroke: INK, strokeOpacity: 0.85 })
       .set(text, { opacity: 0 })
       .set(dividers, { opacity: 0 })
-      .add(drawables, { draw: ["0 0", "0 1"], duration: 1500, delay: stagger(170) }, TRACE);
-
-    if (caption) {
-      tl.add(caption, { opacity: [0, 0.75], duration: 500 }, 700);
-      tl.add(caption, { opacity: 0, duration: 400 }, UNRAVEL - 400);
-    }
+      .set(detail, { opacity: 1 })
+      .add(drawables, { draw: ["0 0", "0 1"], duration: 1500, delay: stagger(170) }, TRACE)
+      // Interior detail fills in behind the contour.
+      .add(detailDrawables, { draw: ["0 0", "0 1"], duration: 700, delay: stagger(55) }, 900)
+      // ...and clears before the contour unravels, so it is not dragged along.
+      .add(detail, { opacity: 0, duration: 420, delay: stagger(22) }, UNRAVEL - 500);
 
     // Unravel: every stroke becomes a rule of the table.
     strokes.forEach((el, i) => {
@@ -174,6 +194,19 @@ export default function SchemaMorph({ className }: { className?: string }) {
         />
       ))}
 
+      {DETAIL.map((d, i) => (
+        <path
+          key={"detail-" + i}
+          data-detail
+          d={d}
+          stroke={INK}
+          strokeOpacity="0.5"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+
       {/* Column dividers, revealed once the rows exist. */}
       {COLUMNS.slice(1).map((c) => (
         <path
@@ -222,18 +255,6 @@ export default function SchemaMorph({ className }: { className?: string }) {
           ))
         )}
 
-        <text
-          data-caption
-          x="310"
-          y="224"
-          textAnchor="middle"
-          fill={INK}
-          fillOpacity="0.55"
-          fontSize="11"
-          opacity="0"
-        >
-          one qualification, before it is a record
-        </text>
       </g>
     </svg>
   );
