@@ -49,11 +49,27 @@ Vercel Speed Insights is enabled, so regressions show up in the dashboard.
 ```
 app/                    # Routes, layout, metadata, sitemap, robots, OG image
 app/projects/[slug]/    # Project detail pages, generated from data/index.ts
-components/home/        # Homepage client pieces: scroll reveal, copy email
+components/companion/   # Pixel Bjorn: sprite data, renderer, follow behaviour
+components/home/        # Homepage client pieces: headline, reveals, previews
 components/ui/          # Project page visuals (neural field, scan title, schema morph)
 data/index.ts           # Site content: projects, experience, education, skills
 lib/                    # Shared helpers (canonical URL, classnames)
+scripts/sprite.py       # Pixel Bjorn's frames; regenerates the sprite data
 ```
+
+## Pixel Bjorn
+
+The little character that follows visitors around is drawn in
+[`scripts/sprite.py`](scripts/sprite.py) as a grid of palette letters. Edit the
+frames there, then regenerate the data the site uses:
+
+```bash
+python scripts/sprite.py export components/companion/sprite.ts
+python scripts/sprite.py preview sprite.png   # optional, needs Pillow
+```
+
+He never takes pointer events, stays out of print, and visitors can switch
+him off with the button in the bottom-left corner; the choice is remembered.
 
 ## Content
 

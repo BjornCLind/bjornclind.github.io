@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 import { siteUrl } from "@/lib/site";
+import CompanionLoader from "@/components/companion/CompanionLoader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -64,6 +65,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <CompanionLoader />
         </ThemeProvider>
         {onVercel && <SpeedInsights />}
       </body>

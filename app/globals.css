@@ -237,6 +237,32 @@
   }
 }
 
+/* Pixel Bjorn's speech bubble: positioned by this anchor so the bubble's own
+   scale animation, which owns its transform, cannot knock it off centre. */
+.companion-anchor {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.companion-anchor[data-edge="left"] {
+  left: 0;
+  transform: none;
+}
+.companion-anchor[data-edge="right"] {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+@media print {
+  .companion-walker,
+  [aria-label$="pixel Bjorn"] {
+    display: none !important;
+  }
+}
+
 /* Scroll reveals hide content with inline styles until it is animated in.
    Printing does not scroll or animate, so everything must be shown. */
 @media print {
