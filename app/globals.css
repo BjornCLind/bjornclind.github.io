@@ -158,6 +158,44 @@
     }
   }
 
+  /* Schematic record rows: abstract cells only, never invented entries.
+     Every row shares one column template, so once they are filed the column
+     edges line up and the block reads as a schema rather than as bars. */
+  /* On a phone the table sits directly behind the copy with no margin to
+     escape into, so it steps back there. */
+  .records-field {
+    opacity: 0.38;
+  }
+
+  @media (min-width: 768px) {
+    .records-field {
+      opacity: 1;
+    }
+  }
+
+  .records-row {
+    position: absolute;
+    left: 14%;
+    display: flex;
+    width: 62%;
+    gap: 14px;
+    height: 11px;
+    align-items: stretch;
+    will-change: transform;
+  }
+
+  .records-col {
+    display: flex;
+    align-items: stretch;
+    border-left: 2px solid rgba(203, 172, 249, 0.24);
+    padding-left: 5px;
+  }
+
+  .records-cell {
+    border-radius: 2px;
+    background: rgba(190, 193, 221, 0.12);
+  }
+
   /* Microfilm backdrop: fine scan lines with a highlight band drifting down,
      like film advancing past a head. */
   .microfilm-lines {

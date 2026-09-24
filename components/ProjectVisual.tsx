@@ -7,10 +7,14 @@ import dynamic from "next/dynamic";
 // chunk.
 const NeuralField = dynamic(() => import("./ui/NeuralField"), { ssr: false });
 const MicrofilmBackdrop = dynamic(() => import("./ui/MicrofilmBackdrop"));
+// Row positions are randomised on the client, so this must not render on the
+// server or the markup would not match.
+const RecordsField = dynamic(() => import("./ui/RecordsField"), { ssr: false });
 
 const VISUALS = {
   "neural-field": NeuralField,
   microfilm: MicrofilmBackdrop,
+  records: RecordsField,
 } as const;
 
 export type VisualKey = keyof typeof VISUALS;

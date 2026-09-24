@@ -42,7 +42,8 @@ export default function ProjectPage({ params }: Params) {
         <article className="relative w-full max-w-3xl py-24 sm:py-32">
           {/* Holds text contrast against the field without hiding it: the
               column is dimmed, the margins stay clear. */}
-          {project.visual === "neural-field" && (
+          {(project.visual === "neural-field" ||
+            project.visual === "records") && (
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -inset-x-8 -inset-y-4 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(0,3,25,0.92)_0%,rgba(0,3,25,0.75)_55%,transparent_100%)]"
@@ -99,6 +100,15 @@ export default function ProjectPage({ params }: Params) {
                 point is your cursor, and the chunks nearest it light up and
                 link in. Drag a chunk to throw it. On a phone the query moves
                 on its own, and a tap re-aims it.
+              </p>
+            )}
+
+            {project.visual === "records" && (
+              <p data-reveal className="mt-8 text-xs text-white-200/70">
+                The rows behind this page arrive scattered and out of true,
+                then file themselves into one table. On a wide screen you can
+                grab a row beside the text and it springs back into place. The
+                cells are abstract, not real records.
               </p>
             )}
 

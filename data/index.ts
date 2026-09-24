@@ -127,7 +127,7 @@ export type Project = {
   context: string;
   detail: string[];
   /** Optional decorative visual rendered behind the page header. */
-  visual?: "neural-field" | "microfilm";
+  visual?: "neural-field" | "microfilm" | "records";
   /** Transcribes the title from handwriting into type on arrival. */
   titleEffect?: "scan";
 };
@@ -169,6 +169,7 @@ export const projects: Project[] = [
     des: "Centralized database and management interface replacing scattered recordkeeping, with structured entry, lookup and reporting in one place.",
     tech: ["Laravel", "SQL", "Web App"],
     context: "Internal tool, not publicly accessible",
+    visual: "records",
     detail: [
       "Records that live in spreadsheets and paper are hard to query and easy to let drift, especially when several people maintain them independently.",
       "A single relational schema with validation at entry replaced that, so the data is consistent enough to report on directly.",
