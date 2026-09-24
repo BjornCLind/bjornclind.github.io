@@ -137,10 +137,37 @@ export default function ScanlineTitle({
   }, []);
 
   // Once the opening pass is done the head tracks the pointer across the title.
+  // A touch device has no hovering cursor to track, so there the title replays
+  // the sweep when it is tapped instead.
   useEffect(() => {
     if (!scrubbable) return;
     const wrap = wrapRef.current;
     if (!wrap) return;
+
+    if (window.matchMedia("(hover: none)").matches) {
+      let replay: ReturnType<typeof animate> | null = null;
+
+      const onTap = () => {
+        replay?.pause();
+        const progress = { p: 0 };
+        wrap.dataset.scanning = "true";
+        replay = animate(progress, {
+          p: 100,
+          duration: 1600,
+          ease: "inOutQuad",
+          onUpdate: () => wrap.style.setProperty("--scan", progress.p + "%"),
+          onComplete: () => {
+            delete wrap.dataset.scanning;
+          },
+        });
+      };
+
+      wrap.addEventListener("click", onTap);
+      return () => {
+        replay?.pause();
+        wrap.removeEventListener("click", onTap);
+      };
+    }
 
     let settle: ReturnType<typeof animate> | null = null;
 

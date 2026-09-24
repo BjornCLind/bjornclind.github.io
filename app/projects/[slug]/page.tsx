@@ -95,9 +95,10 @@ export default function ProjectPage({ params }: Params) {
 
             {project.visual === "neural-field" && (
               <p data-reveal className="mt-8 text-xs text-white-200/70">
-                The field behind this page is the retrieval step: your cursor
-                is the query, and the chunks nearest it light up and link in.
-                Drag one to throw it.
+                The field behind this page is the retrieval step: the query
+                point is your cursor, and the chunks nearest it light up and
+                link in. Drag a chunk to throw it. On a phone the query moves
+                on its own, and a tap re-aims it.
               </p>
             )}
 
@@ -105,7 +106,7 @@ export default function ProjectPage({ params }: Params) {
               <p data-reveal className="mt-8 text-xs text-white-200/70">
                 The title above arrives as handwriting and is transcribed left
                 to right. Move your cursor across it to drive the scanner head
-                yourself.
+                yourself, or tap it on a phone to run the pass again.
               </p>
             )}
 

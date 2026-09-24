@@ -46,6 +46,9 @@ export default function NeuralField({ className }: { className?: string }) {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    // Phones and tablets have no hovering cursor, so there is nothing to drive
+    // the query point. On those the query moves itself, and a tap re-aims it.
+    const noHover = window.matchMedia("(hover: none)").matches;
 
     let width = 0;
     let height = 0;
@@ -63,6 +66,7 @@ export default function NeuralField({ className }: { className?: string }) {
     };
 
     const pointer = { x: -9999, y: -9999, active: false };
+    let autoQuery = Math.random() * Math.PI * 2;
     let grabbed: Node | null = null;
     let lastGrabPos = { x: 0, y: 0 };
 
@@ -169,6 +173,14 @@ export default function NeuralField({ className }: { className?: string }) {
     };
 
     const step = () => {
+      if (noHover && !grabbed) {
+        // A slow wander, so the retrieval behaviour is visible without input.
+        autoQuery += 0.0042;
+        pointer.x = width * (0.5 + 0.3 * Math.cos(autoQuery));
+        pointer.y = height * (0.42 + 0.24 * Math.sin(autoQuery * 1.6));
+        pointer.active = true;
+      }
+
       for (const n of nodes) {
         if (n === grabbed) {
           n.heat = 1;
@@ -270,6 +282,13 @@ export default function NeuralField({ className }: { className?: string }) {
           nearest = n;
         }
       }
+      if (noHover) {
+        pointer.x = p.x;
+        pointer.y = p.y;
+        pointer.active = true;
+        autoQuery = Math.atan2(p.y / height - 0.42, p.x / width - 0.5);
+      }
+
       if (!nearest) return;
 
       grabbed = nearest;
@@ -332,5 +351,12 @@ export default function NeuralField({ className }: { className?: string }) {
 
   // Pointer handling lives on the window, so the canvas itself never needs to
   // receive events and must not sit in front of the article.
-  return <canvas ref={canvasRef} aria-hidden="true" className={className} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className={className}
+      style={{ touchAction: "pan-y" }}
+    />
+  );
 }
