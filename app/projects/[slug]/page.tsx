@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import ProjectIntro from "@/components/ProjectIntro";
 import ProjectVisual from "@/components/ProjectVisual";
-import RecordsPipeline from "@/components/ui/RecordsPipeline";
+import CheckIn3D from "@/components/ui/CheckIn3D";
 import ScanlineTitle from "@/components/ui/ScanlineTitle";
 import { projects } from "@/data";
 import { handwriting } from "@/lib/fonts";
@@ -124,11 +124,12 @@ export default function ProjectPage({ params }: Params) {
 
             {project.scene === "records-pipeline" && (
               <figure data-reveal className="mt-14">
-                <RecordsPipeline className="w-full" />
+                <CheckIn3D />
                 <figcaption className="mt-3 text-xs text-white-200/70">
-                  Paper records carried over by hand, keyed in once, and filed
-                  as aligned rows. The figures are diagrammatic and the rows
-                  are abstract, not real records.
+                  A qualification check-in: the cased firearm goes on the
+                  scanner, the terminal registers it, and the record prints.
+                  Drag to look around. The figure is an artist&apos;s
+                  mannequin and the records are abstract, not real entries.
                 </figcaption>
               </figure>
             )}
