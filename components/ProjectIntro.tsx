@@ -37,7 +37,18 @@ export default function ProjectIntro({
       ease: "outQuad",
     });
 
+    // If the animation never gets to finish -- a heavily throttled or
+    // backgrounded tab starves requestAnimationFrame -- the content must not
+    // be left sitting at opacity 0.
+    const failSafe = window.setTimeout(() => {
+      targets.forEach((el) => {
+        el.style.opacity = "";
+        el.style.transform = "";
+      });
+    }, 4000);
+
     return () => {
+      window.clearTimeout(failSafe);
       animation.pause();
       // Leave the content visible if this unmounts mid-flight.
       targets.forEach((el) => {
