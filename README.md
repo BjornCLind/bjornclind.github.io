@@ -31,25 +31,27 @@ domain, including a custom domain. `NEXT_PUBLIC_SITE_URL` overrides it.
 
 ### Performance
 
-Three libraries dominate the bundle if imported eagerly, so each is deferred:
+The homepage is a server component: only the scroll reveal and the
+copy-email button ship JavaScript. The heavier visuals live on the project
+pages alone and are loaded with `next/dynamic`, so they never reach the
+homepage bundle. Keep it that way.
 
-- `confetti.json` (~600 kB) is imported dynamically when the copy button is
-  pressed, not at module scope.
-- `CanvasRevealEffect` (three.js) loads via `next/dynamic` on hover.
-- The globe waits for an `IntersectionObserver` before mounting.
+Scroll reveals hide content with inline styles until it is animated in, so
+they must never be the only way back to visible: a timer backstop and a
+per-batch deadline force the final state if animation frames or
+IntersectionObserver callbacks are not being delivered (hidden or throttled
+tabs). A print rule shows everything.
 
-Keep it that way — importing any of them statically puts the whole payload
-back into the initial page chunk. Vercel Speed Insights is enabled, so
-regressions show up in the dashboard.
+Vercel Speed Insights is enabled, so regressions show up in the dashboard.
 
 ## Project structure
 
 ```
 app/                    # Routes, layout, metadata, sitemap, robots, OG image
 app/projects/[slug]/    # Project detail pages, generated from data/index.ts
-components/             # Page sections (Hero, Grid, Experience, ...)
-components/ui/          # Reusable animated UI primitives
-data/index.ts           # Site content: nav, bio grid, experience, education, projects
+components/home/        # Homepage client pieces: scroll reveal, copy email
+components/ui/          # Project page visuals (neural field, scan title, schema morph)
+data/index.ts           # Site content: projects, experience, education, skills
 lib/                    # Shared helpers (canonical URL, classnames)
 ```
 
