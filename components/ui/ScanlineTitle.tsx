@@ -1,18 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { animate } from "animejs";
 
 /**
  * The title arrives as handwriting and is transcribed by a scanner head that
- * sweeps across it. Everything left of the head is digitized type; everything
+ * sweeps across it. Everything left of the head is digitized type, everything
  * right of it is still handwriting.
  *
  * After the first pass the head follows the pointer, so the reader can scrub
  * back and forth across the boundary and watch the transcription reverse.
  *
- * Only the typed layer carries the real text; the handwriting layer and the
- * scanner head are decorative.
+ * The two faces have different metrics and would wrap and sit differently, so
+ * the typed layer owns the layout and every handwritten word is measured onto
+ * its typed counterpart. That keeps the line breaks and word positions
+ * identical, which is what makes the boundary read as one piece of text being
+ * converted rather than two texts cross-fading.
+ *
+ * Only the typed layer carries the real text; the handwriting and the scanner
+ * head are decorative.
  */
 export default function ScanlineTitle({
   text,
@@ -24,7 +30,75 @@ export default function ScanlineTitle({
   className?: string;
 }) {
   const wrapRef = useRef<HTMLSpanElement>(null);
+  const typeRef = useRef<HTMLSpanElement>(null);
+  const inkRef = useRef<HTMLSpanElement>(null);
   const [scrubbable, setScrubbable] = useState(false);
+
+  const words = text.split(" ");
+
+  /** Lay each handwritten word over the typed word it transcribes. */
+  const alignInk = useCallback(() => {
+    const wrap = wrapRef.current;
+    const typeLayer = typeRef.current;
+    const inkLayer = inkRef.current;
+    if (!wrap || !typeLayer || !inkLayer) return;
+
+    const typed = typeLayer.querySelectorAll<HTMLElement>("[data-word]");
+    const ink = inkLayer.querySelectorAll<HTMLElement>("[data-word]");
+    if (typed.length !== ink.length) return;
+
+    const origin = wrap.getBoundingClientRect();
+
+    for (let i = 0; i < typed.length; i++) {
+      const box = typed[i].getBoundingClientRect();
+      const inkWord = ink[i];
+
+      // Measure the handwriting at its natural width before scaling it.
+      inkWord.style.transform = "none";
+      inkWord.style.left = box.left - origin.left + "px";
+      inkWord.style.top = box.top - origin.top + "px";
+      const natural = inkWord.getBoundingClientRect().width;
+
+      const scale = natural > 0 ? box.width / natural : 1;
+      // Clamp so an outlier word is never stretched into mush.
+      inkWord.style.transform =
+        "scaleX(" + Math.max(0.7, Math.min(1.6, scale)) + ")";
+    }
+
+    inkLayer.style.opacity = "1";
+  }, []);
+
+  useLayoutEffect(() => {
+    alignInk();
+
+    // The server renders the finished, typed title: the handwriting layer is
+    // hidden until it has been measured, so starting at 0% there would leave
+    // the heading blank until hydration, and blank for good without JS. The
+    // sweep is wound back to its start here, before the browser paints.
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    wrap.style.setProperty("--scan", "0%");
+  }, [alignInk]);
+
+  // Re-measure once the webfont is swapped in, and whenever the title reflows.
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+
+    let cancelled = false;
+    document.fonts?.ready.then(() => {
+      if (!cancelled) alignInk();
+    });
+
+    const ro = new ResizeObserver(() => alignInk());
+    ro.observe(wrap);
+
+    return () => {
+      cancelled = true;
+      ro.disconnect();
+    };
+  }, [alignInk]);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -39,9 +113,9 @@ export default function ScanlineTitle({
       return;
     }
 
-    // Opening pass: handwriting transcribed left to right.
+    // Opening pass: handwriting transcribed left to right. The starting
+    // position was set in the layout effect above, before paint.
     const progress = { p: 0 };
-    setScan(0);
     wrap.dataset.scanning = "true";
 
     const sweep = animate(progress, {
@@ -121,19 +195,31 @@ export default function ScanlineTitle({
     <span
       ref={wrapRef}
       className={"scanline-title " + (className ?? "")}
-      style={{ ["--scan" as string]: "0%" }}
+      style={{ ["--scan" as string]: "100%" }}
     >
+      {/* The real, accessible text, and the layer that owns the layout.
+          Clipping does not hide it from assistive tech. */}
+      <span ref={typeRef} className="scanline-title__type">
+        {words.map((word, i) => (
+          <span key={i}>
+            <span data-word>{word}</span>
+            {i < words.length - 1 ? " " : null}
+          </span>
+        ))}
+      </span>
+
       {/* Handwriting: still to be transcribed, to the right of the head. */}
       <span
+        ref={inkRef}
         aria-hidden="true"
         className={"scanline-title__ink " + handwritingClassName}
       >
-        {text}
+        {words.map((word, i) => (
+          <span key={i} data-word>
+            {word}
+          </span>
+        ))}
       </span>
-
-      {/* The real, accessible text. Clipped, which does not hide it from
-          assistive tech. */}
-      <span className="scanline-title__type">{text}</span>
 
       <span aria-hidden="true" className="scanline-title__head" />
     </span>

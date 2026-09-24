@@ -99,19 +99,33 @@
     clip-path: inset(0 calc(100% - var(--scan, 100%)) 0 0);
   }
 
+  .scanline-title__type [data-word] {
+    display: inline-block;
+  }
+
+  /* Each handwritten word is placed and scaled onto its typed counterpart by
+     ScanlineTitle, so this layer only provides the face and the clip. It stays
+     hidden until that measurement has run. */
   .scanline-title__ink {
     position: absolute;
     inset: 0;
     display: block;
     color: #d8dcf0;
-    /* Caveat sits small and tight next to Inter at the same size, so it is
-       scaled up. overflow is clipped to the typed layer's box: the two faces
-       wrap at different points, and without this the handwriting spills onto
-       the line below the title. */
-    font-size: 1.14em;
-    line-height: 0.9;
-    overflow: hidden;
+    opacity: 0;
     clip-path: inset(0 0 0 var(--scan, 100%));
+  }
+
+  .scanline-title__ink [data-word] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: pre;
+    transform-origin: left top;
+    /* Caveat's x-height is much smaller than Inter's at the same size, so the
+       baselines are nudged together. */
+    font-size: 1.16em;
+    line-height: 0.86;
+    padding-top: 0.06em;
   }
 
   .scanline-title__head {
